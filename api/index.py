@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
 import re
 import os
 
@@ -28,22 +27,11 @@ def transcript():
         return jsonify({'sucesso': False, 'erro': 'Link inválido'})
 
     try:
-        transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['en'])
-        texto = ' '.join([t['text'] for t in transcript])
+        ytt = YouTubeTranscriptApi()
+        fetched = ytt.fetch(video_id, languages=['en'])
+        texto = ' '.join([s.text for s in fetched])
         return jsonify({'sucesso': True, 'transcricao': texto, 'idioma': 'en'})
-    except NoTranscriptFound:
-        try:
-            lista = YouTubeTranscriptApi.list_transcripts(video_id)
-            for t in lista:
-                transcript = t.fetch()
-                texto = ' '.join([seg['text'] for seg in transcript])
-                return jsonify({'sucesso': True, 'transcricao': texto, 'idioma': t.language_code})
-        except Exception as e:
-            return jsonify({'sucesso': False, 'erro': str(e)})
-    except TranscriptsDisabled:
-        return jsonify({'sucesso': False, 'erro': 'Transcrições desativadas'})
     except Exception as e:
-        return jsonify({'sucesso': False, 'erro': str(e)})
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+        try:
+            ytt = YouTubeTranscriptApi()
+            transcript_list = ytt.list(video_id)
