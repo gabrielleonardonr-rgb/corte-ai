@@ -4,8 +4,214 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ROTEIRO.AI</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080808;color:#e8e2d9;font-family:'Space Mono',monospace;min-height:100vh}
+.header{background:#080808;border-bottom:1px solid #1a1a1a;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:#c8ff00}
+.sub{font-size:9px;color:#333;letter-spacing:2px;display:block}
+.main{max-width:720px;margin:0 auto;padding:24px 20px}
+.card{background:#111;border:1px solid #1e1e1e;border-radius:2px;padding:22px;margin-bottom:14px}
+.lbl{font-size:9px;letter-spacing:4px;color:#c8ff00;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.lbl::after{content:'';flex:1;height:1px;background:#1a1a1a}
+.niches{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.nb{background:#0a0a0a;border:1px solid #1e1e1e;color:#666;padding:12px 8px;cursor:pointer;border-radius:2px;font-size:11px;text-align:center;font-family:'Space Mono',monospace;transition:all 0.2s}
+.nb:hover{border-color:#c8ff00}
+.nb.sel{border-color:#c8ff00;background:#141f00;color:#c8ff00}
+.nb .em{font-size:18px;display:block;margin-bottom:4px}
+.angles{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.ab{background:#0a0a0a;border:1px solid #1e1e1e;color:#555;padding:6px 12px;cursor:pointer;border-radius:2px;font-size:11px;font-family:'Space Mono',monospace;transition:all 0.2s}
+.ab:hover{border-color:#c8ff00;color:#e8e2d9}
+.ab.sel{border-color:#c8ff00;color:#c8ff00;background:#141f00}
+.tema{background:#0a0a0a;border:1px solid #1e1e1e;border-radius:2px;padding:14px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.tema:hover{border-color:#c8ff00}
+.tema.sel{border-color:#c8ff00;background:#141f00}
+.badge{font-size:9px;padding:3px 8px;border-radius:2px;white-space:nowrap;flex-shrink:0}
+.badge.alto{background:#141f00;border:1px solid #c8ff00;color:#c8ff00}
+.badge.medio{background:#111;border:1px solid #555;color:#555}
+.btn{width:100%;background:#c8ff00;color:#000;border:none;padding:14px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;cursor:pointer;border-radius:2px;transition:all 0.2s;margin-top:12px}
+.btn:hover{background:#d4ff33;transform:translateY(-1px)}
+.btn:disabled{background:#1e1e1e;color:#444;cursor:not-allowed;transform:none}
+.btn2{background:transparent;color:#c8ff00;border:1px solid #c8ff00;padding:10px 20px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;border-radius:2px;transition:all 0.2s}
+.btn2:hover{background:#c8ff0015}
+.dbtn{width:100%;background:#0f3d1f;color:#00ff88;border:1px solid #1a6e3c;padding:14px;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;cursor:pointer;border-radius:2px;transition:all 0.2s;margin-top:10px}
+.dbtn:hover{background:#1a5c2e}
+.dbtn:disabled{background:#111;color:#444;border-color:#222;cursor:not-allowed}
+.rblock{border-left:3px solid #c8ff00;padding:14px 18px;margin-bottom:10px;background:#0a0a0a;border-radius:0 2px 2px 0}
+.rblock.ctx{border-color:#4488ff}
+.rblock.cnt{border-color:#666}
+.rblock.cta{border-color:#ff8800}
+.rlb{font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;color:#c8ff00}
+.rlb.ctx{color:#4488ff}.rlb.cnt{color:#666}.rlb.cta{color:#ff8800}
+.rtxt{font-size:13px;line-height:1.8;color:#bbb}
+.rtag{display:inline-block;background:#141f00;border:1px solid #1e2e00;color:#c8ff00;font-size:10px;padding:3px 8px;border-radius:2px;margin:2px}
+.lbar{width:160px;height:2px;background:#1a1a1a;margin:16px auto 12px;border-radius:2px;overflow:hidden;position:relative}
+.lbar::after{content:'';position:absolute;height:100%;width:50%;background:#c8ff00;animation:sl 1s infinite ease-in-out}
+@keyframes sl{0%{left:-50%}100%{left:100%}}
+.ltxt{font-size:10px;letter-spacing:3px;color:#444;text-align:center}
+.pill{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:2px;padding:6px 12px;border:1px solid #1e1e1e;border-radius:2px;color:#444}
+.dot{width:6px;height:6px;border-radius:50%}
+.dok{background:#00ff88;box-shadow:0 0 6px #00ff88;animation:pulse 2s infinite}
+.doff{background:#ff4444}.dunk{background:#444}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.dstatus{padding:12px 16px;border-radius:2px;margin-top:10px;font-size:12px;display:flex;align-items:center;gap:10px}
+.ds-saving{background:#0a0a14;border:1px solid #4488ff;color:#4488ff}
+.ds-saved{background:#0a140a;border:1px solid #00ff88;color:#00ff88}
+.ds-error{background:#140a0a;border:1px solid #ff4444;color:#ff4444}
+.acts{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+textarea{width:100%;background:#0a0a0a;border:1px solid #222;color:#e8e2d9;font-family:'Space Mono',monospace;font-size:12px;padding:12px 14px;border-radius:2px;outline:none;transition:border-color 0.2s;resize:vertical}
+textarea:focus{border-color:#c8ff00}
+textarea::placeholder{color:#333}
+</style>
 </head>
 <body>
-<h1>ROTEIRO.AI — em construção</h1>
+
+<div class="header">
+  <div>
+    <div class="logo">ROTEIRO.AI</div>
+    <span class="sub">TOPO DE FUNIL · REELS & SHORTS · DRIVE INTEGRADO</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="pill"><div class="dot dunk" id="dDot"></div><span id="dTxt">SERVIDOR</span></div>
+    <button onclick="checkServer()" style="background:none;border:1px solid #222;color:#555;padding:5px 12px;font-size:10px;cursor:pointer;border-radius:2px;font-family:'Space Mono',monospace;letter-spacing:1px">VERIFICAR</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <div id="sNicho" class="card">
+    <div class="lbl">01 · nicho</div>
+    <div class="niches" id="nichosEl"></div>
+    <div class="lbl">ângulo do vídeo</div>
+    <div class="angles" id="anglesEl"></div>
+    <button class="btn" id="btnT" onclick="gerarTemas()" disabled>GERAR SUGESTÕES DE TEMAS →</button>
+  </div>
+
+  <div id="sTemas" class="card" style="display:none">
+    <div class="lbl">02 · selecione um tema</div>
+    <div id="temasEl"></div>
+    <div style="font-size:9px;letter-spacing:2px;color:#444;margin:12px 0 6px">OU ESCREVA SEU TEMA</div>
+    <textarea id="temaInput" rows="2" placeholder="Ex: Por que a proteína animal é superior..." oninput="onTemaInput()"></textarea>
+    <button class="btn" id="btnR" onclick="gerarRoteiro()" disabled style="margin-top:12px">GERAR ROTEIRO COMPLETO →</button>
+  </div>
+
+  <div id="sRoteiro" class="card" style="display:none">
+    <div class="lbl">03 · roteiro gerado</div>
+    <div id="roteiroEl"></div>
+    <div class="acts">
+      <button class="btn" style="flex:1" onclick="copiar()">COPIAR ROTEIRO</button>
+      <button class="btn2" onclick="voltarT()">OUTRO TEMA</button>
+      <button class="btn2" onclick="reset()">NOVO</button>
+    </div>
+    <button class="dbtn" id="btnDrive" onclick="salvarDrive()">💾 SALVAR NO GOOGLE DRIVE</button>
+    <div id="driveRes" style="display:none"></div>
+  </div>
+
+  <div id="sLoad" style="display:none;text-align:center;padding:60px 20px">
+    <div class="lbar"></div>
+    <div class="ltxt" id="loadTxt">Gerando...</div>
+  </div>
+
+</div>
+
+<script>
+const API='https://corte-ai-production.up.railway.app';
+const NICHES=[
+  {id:'ciencia',label:'Ciência & Saúde',icon:'🔬'},
+  {id:'carnivora',label:'Dieta Carnívora',icon:'🥩'},
+  {id:'suplementacao',label:'Suplementação',icon:'💊'},
+  {id:'treino',label:'Treino & Performance',icon:'💪'},
+  {id:'mentalidade',label:'Mentalidade',icon:'🧠'},
+  {id:'autocuidado',label:'Autocuidado',icon:'✨'},
+];
+const ANGLES=['Mito vs. Verdade','Erro comum que as pessoas cometem','Fato científico surpreendente','O que ninguém te conta sobre...','Por que você está fazendo errado','A descoberta que mudou tudo','Número/Dado chocante','Comparação inesperada'];
+const NICHO_PASTA={ciencia:'🔬 Ciência & Saúde',carnivora:'🥩 Dieta Carnívora',suplementacao:'💊 Suplementação',treino:'💪 Treino & Performance',mentalidade:'🧠 Mentalidade',autocuidado:'✨ Autocuidado'};
+let S={nicho:null,angulo:null,temas:[],temaIdx:null,script:null};
+
+function rNiches(){document.getElementById('nichosEl').innerHTML=NICHES.map(n=>`<button class="nb ${S.nicho===n.id?'sel':''}" onclick="selN('${n.id}')"><span class="em">${n.icon}</span>${n.label}</button>`).join('')}
+function rAngles(){document.getElementById('anglesEl').innerHTML=ANGLES.map(a=>`<button class="ab ${S.angulo===a?'sel':''}" onclick="selA('${encodeURIComponent(a)}')">${a}</button>`).join('')}
+function selN(id){S.nicho=id;rNiches();checkNA()}
+function selA(e){S.angulo=decodeURIComponent(e);rAngles();checkNA()}
+function checkNA(){document.getElementById('btnT').disabled=!(S.nicho&&S.angulo)}
+function show(id){['sNicho','sTemas','sRoteiro','sLoad'].forEach(s=>document.getElementById(s).style.display=s===id?'block':'none')}
+
+async function claude(prompt,sys){
+  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:prompt}]})});
+  const d=await r.json();
+  return JSON.parse(d.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim());
+}
+
+async function gerarTemas(){
+  show('sLoad');document.getElementById('loadTxt').textContent='ANALISANDO ESTRATÉGIA DE FUNIL...';
+  const n=NICHES.find(x=>x.id===S.nicho)?.label;
+  try{
+    const r=await claude(`Sugira 5 temas Reels/Shorts TOPO DE FUNIL sobre: "${n}". Ângulo: "${S.angulo}". JSON: {"temas":[{"titulo":"...","descricao":"...","potencial_viral":"alto"}]}`,'Estrategista de conteúdo de saúde. Responda SOMENTE em JSON válido.');
+    S.temas=r.temas||[];
+    document.getElementById('temasEl').innerHTML=S.temas.map((t,i)=>`<div class="tema" onclick="selTema(${i})"><div><div style="font-size:13px;font-weight:700;margin-bottom:5px;line-height:1.4">${t.titulo}</div><div style="font-size:11px;color:#555;line-height:1.5">${t.descricao}</div></div><span class="badge ${t.potencial_viral==='alto'?'alto':'medio'}">${t.potencial_viral==='alto'?'🔥 ALTO':'📈 MÉDIO'}</span></div>`).join('');
+    show('sTemas');
+  }catch(e){show('sNicho');alert('Erro ao gerar temas. Tente novamente.')}
+}
+
+function selTema(i){S.temaIdx=i;document.getElementById('temaInput').value='';document.getElementById('temasEl').querySelectorAll('.tema').forEach((el,j)=>el.classList.toggle('sel',j===i));document.getElementById('btnR').disabled=false}
+function onTemaInput(){const v=document.getElementById('temaInput').value.trim();if(v){S.temaIdx=null;document.getElementById('temasEl').querySelectorAll('.tema').forEach(el=>el.classList.remove('sel'))}document.getElementById('btnR').disabled=!v&&S.temaIdx===null}
+
+async function gerarRoteiro(){
+  const tema=document.getElementById('temaInput').value.trim()||S.temas[S.temaIdx]?.titulo;
+  if(!tema)return;
+  show('sLoad');document.getElementById('loadTxt').textContent='ESCREVENDO ROTEIRO...';
+  const n=NICHES.find(x=>x.id===S.nicho)?.label;
+  try{
+    S.script=await claude(`TEMA: "${tema}"\nNICHO: ${n}\nÂNGULO: ${S.angulo}`,'Especialista em roteiros Reels/Shorts de saúde, ciência, nutrição, farmacologia. Tom: direto, científico, topo de funil. JSON: {"titulo":"...","angulo":"...","duracao_estimada":"...","roteiro":{"gancho":"...","problema":"...","conteudo":"...","cta":"..."},"dicas_producao":["..."],"hashtags":["#..."]}');
+    const s=S.script;
+    document.getElementById('roteiroEl').innerHTML=`
+      <div style="margin-bottom:16px"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:24px;margin-bottom:8px">${s.titulo}</div><span class="rtag">${s.angulo}</span><span class="rtag">⏱ ${s.duracao_estimada}</span></div>
+      <div class="rblock"><div class="rlb">🎣 GANCHO · 0-3s</div><div class="rtxt">${s.roteiro.gancho}</div></div>
+      <div class="rblock ctx"><div class="rlb ctx">⚡ PROBLEMA · 3-15s</div><div class="rtxt">${s.roteiro.problema}</div></div>
+      <div class="rblock cnt"><div class="rlb cnt">📚 CONTEÚDO · 15-45s</div><div class="rtxt">${s.roteiro.conteudo}</div></div>
+      <div class="rblock cta"><div class="rlb cta">📣 CTA · 45-60s</div><div class="rtxt">${s.roteiro.cta}</div></div>
+      ${s.dicas_producao?.length?`<div style="margin:14px 0;background:#0a0a0a;border:1px solid #1a1a1a;padding:12px 16px;border-radius:2px"><div style="font-size:9px;letter-spacing:3px;color:#333;margin-bottom:10px">DICAS DE PRODUÇÃO</div>${s.dicas_producao.map(d=>`<div style="font-size:11px;color:#555;margin-bottom:4px;padding-left:10px;border-left:2px solid #1e1e1e;line-height:1.5">${d}</div>`).join('')}</div>`:''}
+      ${s.hashtags?.length?`<div style="margin-bottom:4px"><div style="font-size:9px;letter-spacing:3px;color:#333;margin-bottom:8px">HASHTAGS</div>${s.hashtags.map(h=>`<span class="rtag">${h}</span>`).join('')}</div>`:''}`;
+    show('sRoteiro');
+  }catch(e){show('sTemas');alert('Erro ao gerar roteiro. Tente novamente.')}
+}
+
+function copiar(){
+  const s=S.script;if(!s)return;
+  navigator.clipboard.writeText(`🎬 ${s.titulo}\n\n🎣 GANCHO:\n${s.roteiro.gancho}\n\n⚡ PROBLEMA:\n${s.roteiro.problema}\n\n📚 CONTEÚDO:\n${s.roteiro.conteudo}\n\n📣 CTA:\n${s.roteiro.cta}\n\n${s.hashtags?.join(' ')}`);
+  event.target.textContent='✓ COPIADO!';setTimeout(()=>event.target.textContent='COPIAR ROTEIRO',2000);
+}
+
+async function salvarDrive(){
+  const s=S.script;if(!s)return;
+  const btn=document.getElementById('btnDrive');
+  const res=document.getElementById('driveRes');
+  btn.disabled=true;btn.textContent='💾 SALVANDO...';
+  res.style.display='flex';res.className='dstatus ds-saving';res.innerHTML='⏳ Salvando no servidor...';
+  const nicho=NICHO_PASTA[S.nicho]||'🔬 Ciência & Saúde';
+  const conteudo=`ROTEIRO: ${s.titulo}\nNicho: ${nicho}\nÂngulo: ${s.angulo}\nDuração: ${s.duracao_estimada}\n\n━━━━━━━━━━━━━\n\n🎣 GANCHO\n${s.roteiro.gancho}\n\n⚡ PROBLEMA\n${s.roteiro.problema}\n\n📚 CONTEÚDO\n${s.roteiro.conteudo}\n\n📣 CTA\n${s.roteiro.cta}\n\nDICAS\n${(s.dicas_producao||[]).join('\n')}\n\nHASHTAGS\n${(s.hashtags||[]).join(' ')}`;
+  try{
+    const r=await fetch(`${API}/save`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({titulo:s.titulo,nicho,conteudo})});
+    const d=await r.json();
+    if(d.sucesso){res.className='dstatus ds-saved';res.innerHTML=`✅ ${d.mensagem} · <strong style="margin-left:4px">${d.nome}</strong>`}
+    else throw new Error(d.erro||'Erro desconhecido');
+  }catch(e){res.className='dstatus ds-error';res.innerHTML='❌ Erro: '+e.message}
+  btn.disabled=false;btn.textContent='💾 SALVAR NO GOOGLE DRIVE';
+}
+
+async function checkServer(){
+  const dot=document.getElementById('dDot');const txt=document.getElementById('dTxt');
+  try{
+    const r=await fetch(`${API}/`);const d=await r.json();
+    if(d.status==='ok'){dot.className='dot dok';txt.textContent='SERVIDOR ✓'}
+    else throw new Error();
+  }catch{dot.className='dot doff';txt.textContent='SERVIDOR OFF'}
+}
+
+function voltarT(){show('sTemas')}
+function reset(){S={nicho:null,angulo:null,temas:[],temaIdx:null,script:null};rNiches();rAngles();show('sNicho');document.getElementById('btnT').disabled=true}
+
+rNiches();rAngles();checkServer();
+</script>
 </body>
 </html>
