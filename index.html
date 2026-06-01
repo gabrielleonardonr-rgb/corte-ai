@@ -136,10 +136,19 @@ function selA(e){S.angulo=decodeURIComponent(e);rAngles();checkNA()}
 function checkNA(){document.getElementById('btnT').disabled=!(S.nicho&&S.angulo)}
 function show(id){['sNicho','sTemas','sRoteiro','sLoad'].forEach(s=>document.getElementById(s).style.display=s===id?'block':'none')}
 
-async function claude(prompt,sys){
-  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sys,messages:[{role:'user',content:prompt}]})});
-  const d=await r.json();
-  return JSON.parse(d.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim());
+async function claude(prompt, sys) {
+  const r = await fetch(`${API}/claude`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      system: sys,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  const d = await r.json();
+  return JSON.parse(
+    d.content.map(i => i.text || '').join('').replace(/```json|```/g, '').trim()
+  );
 }
 
 async function gerarTemas(){
