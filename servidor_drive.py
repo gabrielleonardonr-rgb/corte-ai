@@ -3,7 +3,6 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaInMemoryUpload
 import json, datetime
-from urllib.parse import urlparse, parse_qs
 
 with open("C:/Users/qa-nb03/token_drive.json") as f:
     t = json.load(f)
@@ -22,9 +21,16 @@ class Handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
+
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        self.wfile.write(json.dumps({"status": "ok"}).encode())
 
     def do_POST(self):
         length = int(self.headers['Content-Length'])
@@ -32,20 +38,22 @@ class Handler(BaseHTTPRequestHandler):
         titulo = body.get("titulo", "Roteiro")
         nicho = body.get("nicho", "🔬 Ciência & Saúde")
         conteudo = body.get("conteudo", "")
-
-        raiz = encontrar_pasta("🎬 AGENTE ROTEIROS")
-        roteiros = encontrar_pasta("📁 Roteiros", raiz)
-        nicho_id = encontrar_pasta(nicho, roteiros)
-        data = datetime.datetime.now().strftime("%d-%m-%Y")
-        nome = f"{data} — {titulo}.txt"
-        media = MediaInMemoryUpload(conteudo.encode("utf-8"), mimetype="text/plain")
-        arquivo = service.files().create(body={"name": nome, "parents": [nicho_id]}, media_body=media, fields="id,name,webViewLink").execute()
-
+        try:
+            raiz = encontrar_pasta("🎬 AGENTE ROTEIROS")
+            roteiros = encontrar_pasta("📁 Roteiros", raiz)
+            nicho_id = encontrar_pasta(nicho, roteiros)
+            data = datetime.datetime.now().strftime("%d-%m-%Y")
+            nome = f"{data} — {titulo}.txt"
+            media = MediaInMemoryUpload(conteudo.encode("utf-8"), mimetype="text/plain")
+            arquivo = service.files().create(body={"name": nome, "parents": [nicho_id]}, media_body=media, fields="id,name,webViewLink").execute()
+            resposta = {"sucesso": True, "link": arquivo["webViewLink"], "nome": arquivo["name"]}
+        except Exception as e:
+            resposta = {"sucesso": False, "erro": str(e)}
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
-        self.wfile.write(json.dumps({"sucesso": True, "link": arquivo["webViewLink"], "nome": arquivo["name"]}).encode())
+        self.wfile.write(json.dumps(resposta).encode())
 
     def log_message(self, format, *args): pass
 
